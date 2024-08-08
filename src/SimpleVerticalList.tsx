@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import List from "./List";
 
-// fake data generator
+// Fake data generator
 const getItems = (count: number, offset: number = 0) =>
 	Array.from({ length: count }, (v, k) => k + offset).map((k) => ({
 		id: `item-${k}`,
@@ -10,7 +10,7 @@ const getItems = (count: number, offset: number = 0) =>
 		checked: true,
 	}));
 
-// a little function to help us with reordering the result
+// A little function to help us with reordering the result
 const reorder = <TList extends unknown[]>(list: TList, startIndex: number, endIndex: number): TList => {
 	const result = Array.from(list) as TList;
 	const [removed] = result.splice(startIndex, 1);
@@ -40,12 +40,14 @@ const SimpleVerticalList: React.FC = () => {
 	}>({
 		items1: getItems(10),
 		items2: getItems(5, 10),
+		items3: getItems(5, 15),
+		items4: getItems(5, 20),
 	});
 
 	const onDragEnd = (result: DropResult) => {
 		const { source, destination } = result;
 
-		// dropped outside the list
+		// Dropped outside the list
 		if (!destination) {
 			return;
 		}
@@ -60,10 +62,10 @@ const SimpleVerticalList: React.FC = () => {
 		} else {
 			const result = move(state[source.droppableId], state[destination.droppableId], source, destination);
 
-			setState({
-				items1: result.items1,
-				items2: result.items2,
-			});
+			setState((prevState) => ({
+				...prevState,
+				...result,
+			}));
 		}
 	};
 
@@ -89,6 +91,8 @@ const SimpleVerticalList: React.FC = () => {
 			<DragDropContext onDragEnd={onDragEnd}>
 				<List droppableId="items1" items={state.items1} onChange={handleCheckboxChange} />
 				<List droppableId="items2" items={state.items2} onChange={handleCheckboxChange} />
+				<List droppableId="items3" items={state.items3} onChange={handleCheckboxChange} />
+				<List droppableId="items4" items={state.items4} onChange={handleCheckboxChange} />
 			</DragDropContext>
 			<button onClick={printStateAsJSON}>Print State as JSON</button>
 		</div>
