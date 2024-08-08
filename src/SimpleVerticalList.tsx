@@ -80,11 +80,18 @@ const SimpleVerticalList: React.FC = () => {
 		});
 	};
 
+	const printStateAsJSON = () => {
+		console.log(JSON.stringify(state, null, 2));
+	};
+
 	return (
-		<DragDropContext onDragEnd={onDragEnd}>
-			<List droppableId="items1" items={state.items1} onChange={handleCheckboxChange} />
-			<List droppableId="items2" items={state.items2} onChange={handleCheckboxChange} />
-		</DragDropContext>
+		<div>
+			<DragDropContext onDragEnd={onDragEnd}>
+				<List droppableId="items1" items={state.items1} onChange={handleCheckboxChange} />
+				<List droppableId="items2" items={state.items2} onChange={handleCheckboxChange} />
+			</DragDropContext>
+			<button onClick={printStateAsJSON}>Print State as JSON</button>
+		</div>
 	);
 };
 
