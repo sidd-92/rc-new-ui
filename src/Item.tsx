@@ -13,12 +13,12 @@ const getItemStyle = (isDragging: boolean, draggableStyle: CSSProperties = {}): 
 });
 
 interface ItemProps {
-	item: { id: string; content: string };
+	item: { id: string; content: string; checked: boolean };
 	index: number;
+	onChange: (id: string, checked: boolean) => void;
 }
 
-const Item: React.FC<ItemProps> = ({ item, index }) => {
-	const [checked, setChecked] = React.useState(true);
+const Item: React.FC<ItemProps> = ({ item, index, onChange }) => {
 	return (
 		<Draggable key={item.id} draggableId={item.id} index={index}>
 			{(provided, snapshot) => (
@@ -28,7 +28,11 @@ const Item: React.FC<ItemProps> = ({ item, index }) => {
 					{...provided.dragHandleProps}
 					style={getItemStyle(snapshot.isDragging, provided.draggableProps.style)}
 				>
-					<Checkbox checked={checked} onChange={(e) => setChecked(e.target.checked)} label={item.content} />
+					<Checkbox
+						checked={item.checked}
+						onChange={(e) => onChange(item.id, e.target.checked)}
+						label={item.content}
+					/>
 				</div>
 			)}
 		</Draggable>

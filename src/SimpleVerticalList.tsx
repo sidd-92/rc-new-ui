@@ -7,6 +7,7 @@ const getItems = (count: number, offset: number = 0) =>
 	Array.from({ length: count }, (v, k) => k + offset).map((k) => ({
 		id: `item-${k}`,
 		content: `item ${k}`,
+		checked: true,
 	}));
 
 // a little function to help us with reordering the result
@@ -35,7 +36,7 @@ const move = (source: any[], destination: any[], droppableSource: any, droppable
 
 const SimpleVerticalList: React.FC = () => {
 	const [state, setState] = useState<{
-		[key: string]: { id: string; content: string }[];
+		[key: string]: { id: string; content: string; checked: boolean }[];
 	}>({
 		items1: getItems(10),
 		items2: getItems(5, 10),
@@ -66,10 +67,23 @@ const SimpleVerticalList: React.FC = () => {
 		}
 	};
 
+	const handleCheckboxChange = (id: string, checked: boolean) => {
+		setState((prevState) => {
+			const newState = { ...prevState };
+			for (const list in newState) {
+				const itemIndex = newState[list].findIndex((item) => item.id === id);
+				if (itemIndex !== -1) {
+					newState[list][itemIndex].checked = checked;
+				}
+			}
+			return newState;
+		});
+	};
+
 	return (
 		<DragDropContext onDragEnd={onDragEnd}>
-			<List droppableId="items1" items={state.items1} />
-			<List droppableId="items2" items={state.items2} />
+			<List droppableId="items1" items={state.items1} onChange={handleCheckboxChange} />
+			<List droppableId="items2" items={state.items2} onChange={handleCheckboxChange} />
 		</DragDropContext>
 	);
 };

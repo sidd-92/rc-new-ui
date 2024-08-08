@@ -13,15 +13,16 @@ const getListStyle = (isDraggingOver: boolean): CSSProperties => ({
 
 interface ListProps {
 	droppableId: string;
-	items: { id: string; content: string }[];
+	items: { id: string; content: string; checked: boolean }[];
+	onChange: (id: string, checked: boolean) => void;
 }
 
-const List: React.FC<ListProps> = ({ droppableId, items }) => (
+const List: React.FC<ListProps> = ({ droppableId, items, onChange }) => (
 	<Droppable droppableId={droppableId}>
 		{(provided, snapshot) => (
 			<div ref={provided.innerRef} style={getListStyle(snapshot.isDraggingOver)} {...provided.droppableProps}>
 				{items.map((item, index) => (
-					<Item key={item.id} item={item} index={index} />
+					<Item key={item.id} item={item} index={index} onChange={onChange} />
 				))}
 				{provided.placeholder}
 			</div>
